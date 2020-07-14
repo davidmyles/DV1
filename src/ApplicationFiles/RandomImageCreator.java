@@ -1,16 +1,20 @@
 package ApplicationFiles;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Random;
+import java.util.stream.DoubleStream;
+import java.util.stream.Stream;
 
 /**
  * Class which creates an array of random integers and uses this to generate a test image
  */
 public class RandomImageCreator {
 
-    public int w = 5;
-    public int h = 5;
+    public int w = 3;
+    public int h = 3;
     double[][] pixelArray;
+    double [] flatArray;
     Random random = new Random();
     BufferedImage newImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
 
@@ -27,15 +31,21 @@ public class RandomImageCreator {
         }
     }
 
+    public void flattenArray(double [][] d1)  {
+        flatArray = Stream.of(d1).flatMapToDouble(DoubleStream::of).toArray();
+    }
+
     /**
      * Uses the array to generate an image where the pixel values (in greyscale) correspond to the array
      * element at that position
      */
-    public void createImage()	{
-        for(int y = 0; y < h; y++){
+    public void createImage(double [][] pixelArray)	{
+        for(int y = 0; y < h; y++)  {
             for(int x = 0; x < w; x++){
                 int r = (int) pixelArray[x][y];
-                newImage.setRGB(x, y, r);
+                Color thisColor = new Color(r, r, r);
+                int setColour = thisColor.getRGB();
+                newImage.setRGB(x, y, setColour);
             }
         }
     }
@@ -53,5 +63,8 @@ public class RandomImageCreator {
     public double[][] getPixelArray()	{
         return pixelArray;
     }
+
+
+    public double[] getFlatArray()  { return flatArray; }
 }
 

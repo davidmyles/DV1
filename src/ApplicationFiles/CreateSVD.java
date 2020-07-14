@@ -9,21 +9,37 @@ import org.apache.commons.math3.linear.SingularValueDecomposition;
  */
 public class CreateSVD {
 
-    Array2DRowRealMatrix imageArray;
-    private SingularValueDecomposition svd;
+    private static SingularValueDecomposition imageSVD;
+    private static SingularValueDecomposition trainingSVD;
+    //Array2DRowRealMatrix imageArray;
 
     /**
-     * Constructor for SVD, takes RealMatrix object as parameter
+     * Performs SVD on RealMatrix for input image
      */
-    public CreateSVD(Array2DRowRealMatrix imageArray)	{
-        svd = new SingularValueDecomposition(imageArray);
+    public void CreateImageSVD(Array2DRowRealMatrix imageArray)	{
+        imageSVD = new SingularValueDecomposition(imageArray);
     }
 
     /**
-     * Accessor for SVD object
+     * Performs SVD on RealMatrix for training image
+     * @param trainingArray
      */
-    public SingularValueDecomposition getSVD()	{
-        return svd;
+    public void CreateTrainingSVD(Array2DRowRealMatrix trainingArray) {
+        trainingSVD = new SingularValueDecomposition(trainingArray);
+    }
 
+    /**
+     * Accessor for input SVD object
+     */
+    public static SingularValueDecomposition getImageSVD()	{
+        return imageSVD;
+    }
+
+    /**
+     * Accessor for training SVD object
+     * @return
+     */
+    public static org.apache.commons.math3.linear.SingularValueDecomposition getTrainingSVD()   {
+        return trainingSVD;
     }
 }
