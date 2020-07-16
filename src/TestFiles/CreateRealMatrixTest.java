@@ -1,7 +1,8 @@
 package TestFiles;
 
-import ApplicationFiles.CreateRealMatrix;
-import ApplicationFiles.RandomImageCreator;
+import ApplicationFiles.ArrayProcessor;
+import ApplicationFiles.ImageMatrix;
+import ApplicationFiles.RandomImage;
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 import org.junit.jupiter.api.Test;
 
@@ -19,10 +20,10 @@ class CreateRealMatrixTest {
      */
     @Test
     void createRealMatrixTest() {
-        RandomImageCreator ric1 = new RandomImageCreator();
+        RandomImage ric1 = new RandomImage();
         ric1.createArray();
         double [][] d1 = ric1.getPixelArray();
-        CreateRealMatrix crm1 = new CreateRealMatrix();
+        ImageMatrix crm1 = new ImageMatrix();
         crm1.CreateImageRealMatrix(d1);
         Array2DRowRealMatrix r2rrm = crm1.getImageMatrix();
         assertEquals(d1.length, r2rrm.getRowDimension());
@@ -36,10 +37,10 @@ class CreateRealMatrixTest {
      */
     @Test
     void populateRealMatrixTest() {
-        RandomImageCreator ric1 = new RandomImageCreator();
+        RandomImage ric1 = new RandomImage();
         ric1.createArray();
         double [][] d1 = ric1.getPixelArray();
-        CreateRealMatrix crm1 = new CreateRealMatrix();
+        ImageMatrix crm1 = new ImageMatrix();
         crm1.CreateImageRealMatrix(d1);
         Array2DRowRealMatrix r2rrm = crm1.getImageMatrix();
         Random random1 = new Random();
@@ -50,17 +51,17 @@ class CreateRealMatrixTest {
 
     @Test
     void populateTrainingMatrixTest() {
-        RandomImageCreator ric1 = new RandomImageCreator();
+        RandomImage ric1 = new RandomImage();
         ric1.createArray();
         double [][] d1 = ric1.getPixelArray();
         ric1.flattenArray(d1);
         double [] d2 = ric1.getFlatArray();
-        RandomImageCreator ric2 = new RandomImageCreator();
+        RandomImage ric2 = new RandomImage();
         ric2.createArray();
         double [][] d3 = ric2.getPixelArray();
         ric2.flattenArray(d3);
         double [] d4 = ric2.getFlatArray();
-        CreateRealMatrix crm = new CreateRealMatrix();
+        ImageMatrix crm = new ImageMatrix();
         int x = d2.length;
         crm.CreateTrainingRealMatrix(x, 3);
         Array2DRowRealMatrix a2rrm = crm.getTrainingMatrix();
@@ -76,29 +77,30 @@ class CreateRealMatrixTest {
 
     @Test
     void getAvgValuesTest() {
-        RandomImageCreator ric1 = new RandomImageCreator();
+        RandomImage ric1 = new RandomImage();
         ric1.createArray();
         double [][] d1 = ric1.getPixelArray();
         ric1.flattenArray(d1);
         double [] d2 = ric1.getFlatArray();
-        RandomImageCreator ric2 = new RandomImageCreator();
+        RandomImage ric2 = new RandomImage();
         ric2.createArray();
         double [][] d3 = ric2.getPixelArray();
         ric2.flattenArray(d3);
         double [] d4 = ric2.getFlatArray();
-        RandomImageCreator ric3 = new RandomImageCreator();
+        RandomImage ric3 = new RandomImage();
         ric3.createArray();
         double [][] d5 = ric2.getPixelArray();
         ric2.flattenArray(d5);
         double [] d6 = ric2.getFlatArray();
-        CreateRealMatrix crm = new CreateRealMatrix();
+        ImageMatrix crm = new ImageMatrix();
+        ArrayProcessor ap = new ArrayProcessor();
         int x = d2.length;
         crm.CreateTrainingRealMatrix(x, 4);
         Array2DRowRealMatrix a2rrm = crm.getTrainingMatrix();
         crm.PopulateTrainingMatrix(a2rrm, d2, 0);
         crm.PopulateTrainingMatrix(a2rrm, d4, 1);
         crm.PopulateTrainingMatrix(a2rrm, d6, 2);
-        crm.getAvgValues(a2rrm);
+        ap.getAvgValues(a2rrm);
         assertEquals(((d2[0]+d4[0]+d6[0])/3), a2rrm.getEntry(0,3), 1);
         assertEquals(((d2[1]+d4[1]+d6[1])/3), a2rrm.getEntry(1,3), 1);
         assertEquals(((d2[2]+d4[2]+d6[2])/3), a2rrm.getEntry(2,3), 1);
@@ -112,31 +114,32 @@ class CreateRealMatrixTest {
 
     @Test
     void applyAvgValues() {
-        RandomImageCreator ric1 = new RandomImageCreator();
+        RandomImage ric1 = new RandomImage();
         ric1.createArray();
         double [][] d1 = ric1.getPixelArray();
         ric1.flattenArray(d1);
         double [] d2 = ric1.getFlatArray();
-        RandomImageCreator ric2 = new RandomImageCreator();
+        RandomImage ric2 = new RandomImage();
         ric2.createArray();
         double [][] d3 = ric2.getPixelArray();
         ric2.flattenArray(d3);
         double [] d4 = ric2.getFlatArray();
-        RandomImageCreator ric3 = new RandomImageCreator();
+        RandomImage ric3 = new RandomImage();
         ric3.createArray();
         double [][] d5 = ric2.getPixelArray();
         ric2.flattenArray(d5);
         double [] d6 = ric2.getFlatArray();
-        CreateRealMatrix crm = new CreateRealMatrix();
+        ImageMatrix crm = new ImageMatrix();
+        ArrayProcessor ap = new ArrayProcessor();
         int x = d2.length;
         crm.CreateTrainingRealMatrix(x, 4);
         Array2DRowRealMatrix a2rrm = crm.getTrainingMatrix();
         crm.PopulateTrainingMatrix(a2rrm, d2, 0);
         crm.PopulateTrainingMatrix(a2rrm, d4, 1);
         crm.PopulateTrainingMatrix(a2rrm, d6, 2);
-        crm.getAvgValues(a2rrm);
-        crm.finaliseAvgValues(a2rrm);
-        double [][] d7 = crm.finaliseAvgValues(a2rrm);
+        ap.getAvgValues(a2rrm);
+        ap.finaliseAvgValues(a2rrm);
+        double [][] d7 = ap.finaliseAvgValues(a2rrm);
         assertEquals(a2rrm.getRowDimension(), d7.length);
         assertEquals(a2rrm.getColumnDimension()-1, d7[0].length);
     }

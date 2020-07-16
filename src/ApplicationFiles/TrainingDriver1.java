@@ -12,31 +12,31 @@ import java.util.Arrays;
 public class TrainingDriver1 {
 
     static double [] d2;
-    static CreateRealMatrix crm;
+    static ImageMatrix im;
     static Array2DRowRealMatrix baseMatrix;
 
     public static void runTrainingDriver1a()    {
-        crm = new CreateRealMatrix();
-        crm.CreateTrainingRealMatrix(9, 4);
-        baseMatrix = crm.getTrainingMatrix();
+        im = new ImageMatrix();
+        im.CreateTrainingRealMatrix(9, 4);
+        baseMatrix = im.getTrainingMatrix();
 
     }
 
     public static void runTrainingDriver1b(String filepath, Array2DRowRealMatrix baseMatrix, int row)  {
-        RandomImageCreator ric1 = new RandomImageCreator();
-        ric1.createArray();
-        double [][] d1 = ric1.getPixelArray();
-        ric1.flattenArray(d1);
-        ric1.createImage(d1);
-        d2 = ric1.getFlatArray();
+        RandomImage ri1 = new RandomImage();
+        ri1.createArray();
+        double [][] d1 = ri1.getPixelArray();
+        ri1.flattenArray(d1);
+        ri1.createImage(d1);
+        d2 = ri1.getFlatArray();
         System.out.println(Arrays.toString(d2));
         File file1 = new File(filepath);
         try {
-            ImageIO.write(ric1.newImage, "png", file1);
+            ImageIO.write(ri1.newImage, "png", file1);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        crm.PopulateTrainingMatrix(baseMatrix, d2, row);
+        im.PopulateTrainingMatrix(baseMatrix, d2, row);
     }
 
     public static void main(String args[]) {
@@ -44,33 +44,34 @@ public class TrainingDriver1 {
         runTrainingDriver1b("/Users/davidjmyles/IdeaProjects/DV1/trainingimages1/img_01.png", baseMatrix, 0);
         runTrainingDriver1b("/Users/davidjmyles/IdeaProjects/DV1/trainingimages1/img_02.png", baseMatrix, 1);
         runTrainingDriver1b("/Users/davidjmyles/IdeaProjects/DV1/trainingimages1/img_03.png", baseMatrix, 2);
-        crm.getAvgValues(baseMatrix);
+        ArrayProcessor ap = new ArrayProcessor();
+        ap.getAvgValues(baseMatrix);
         //System.out.println(Arrays.deepToString(baseMatrix.getData()));
-        crm.applyAvgValues(baseMatrix);
+        ap.applyAvgValues(baseMatrix);
         //System.out.println(Arrays.deepToString(baseMatrix.getData()));
-        crm.finaliseAvgValues(baseMatrix);
-        CreateSVD csvd = new CreateSVD();
-        double [][] d1 = crm.finaliseAvgValues(baseMatrix);
+        ap.finaliseAvgValues(baseMatrix);
+        SVD svd = new SVD();
+        double [][] d1 = ap.finaliseAvgValues(baseMatrix);
         System.out.println("D1: " + Arrays.deepToString(d1));
-        crm.CreateImageRealMatrix(d1);
-        Array2DRowRealMatrix a2rrm = crm.getTrainingMatrix();
-        csvd.CreateTrainingSVD(a2rrm);
-        SingularValueDecomposition svd = csvd.getTrainingSVD();
-        RealMatrix r1 = svd.getU();
+        im.CreateImageRealMatrix(d1);
+        Array2DRowRealMatrix a2rrm = im.getTrainingMatrix();
+        svd.CreateTrainingSVD(a2rrm);
+        SingularValueDecomposition svd1 = svd.getTrainingSVD();
+        RealMatrix r1 = svd1.getU();
         System.out.println("Raw Principle Components: " + Arrays.deepToString(r1.getData()));
-        crm.createPCMatrix();
-        crm.calculateImageWeights(d1,r1,0, 0, 0);
-        crm.calculateImageWeights(d1,r1,0, 1, 1);
-        crm.calculateImageWeights(d1,r1,1, 0, 2);
-        crm.calculateImageWeights(d1,r1,1, 1, 3);
-        crm.calculateImageWeights(d1,r1,2, 0, 4);
-        crm.calculateImageWeights(d1,r1,2, 1, 5);
-        RealMatrix r2 = crm.getPCMatrix();
+        ap.createPCMatrix();
+        ap.calculateImageWeights(d1,r1,0, 0, 0);
+        ap.calculateImageWeights(d1,r1,0, 1, 1);
+        ap.calculateImageWeights(d1,r1,1, 0, 2);
+        ap.calculateImageWeights(d1,r1,1, 1, 3);
+        ap.calculateImageWeights(d1,r1,2, 0, 4);
+        ap.calculateImageWeights(d1,r1,2, 1, 5);
+        RealMatrix r2 = ap.getPCMatrix();
         System.out.println("Calculated Principle Components: " + Arrays.deepToString(r2.getData()));
-        double[][] d5 = crm.createWeightsArray(r2);
+        double[][] d5 = ap.createWeightsArray(r2);
         System.out.println("Weights Array: " + Arrays.deepToString(d5));
-        crm.createWeightsTable(d5);
-        double [][] d6 = crm.getWeightsTable();
+        ap.createWeightsTable(d5);
+        double [][] d6 = ap.getWeightsTable();
         System.out.println("Weights Table: " + Arrays.deepToString(d6));
 
 

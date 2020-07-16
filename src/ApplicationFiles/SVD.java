@@ -7,7 +7,7 @@ import org.apache.commons.math3.linear.SingularValueDecomposition;
 /**
  * Creates SVD objects from a RealMatrix
  */
-public class CreateSVD {
+public class SVD {
 
     private static SingularValueDecomposition imageSVD;
     private static SingularValueDecomposition trainingSVD;

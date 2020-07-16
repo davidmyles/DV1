@@ -11,7 +11,7 @@ public class StoreSingularValues {
 
     double [] d1;
 
-    public void insertValues(String img_ID, CreateSVD svd1) throws SQLException {
+    public void insertValues(String img_ID, SVD svd1) throws SQLException {
         Connection conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/XEPDB1","byb19169", "1234567899");
         SingularValueDecomposition inputArray = svd1.getTrainingSVD();
         d1 = inputArray.getSingularValues();

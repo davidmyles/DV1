@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 /**
  * Class which creates an array of random integers and uses this to generate a test image
  */
-public class RandomImageCreator {
+public class RandomImage {
 
     public int w = 3;
     public int h = 3;

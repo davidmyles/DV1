@@ -1,6 +1,6 @@
 package TestFiles;
 
-import ApplicationFiles.RandomImageCreator;
+import ApplicationFiles.RandomImage;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
@@ -19,7 +19,7 @@ class RandomImageCreatorTest {
      */
     @Test
     void createArrayTest() {
-        RandomImageCreator ric1 = new RandomImageCreator();
+        RandomImage ric1 = new RandomImage();
         ric1.createArray();
         assertEquals(ric1.h, ric1.getPixelArray().length);
         assertEquals(ric1.w, ric1.getPixelArray()[0].length);
@@ -30,7 +30,7 @@ class RandomImageCreatorTest {
      */
     @Test
     void createImageTest() {
-        RandomImageCreator ric2 = new RandomImageCreator();
+        RandomImage ric2 = new RandomImage();
         ric2.createArray();
         Random r2a = new Random();
         Random r2b = new Random();
@@ -44,7 +44,7 @@ class RandomImageCreatorTest {
      */
     @Test
     void imageDimensionTest() {
-        RandomImageCreator ric3 = new RandomImageCreator();
+        RandomImage ric3 = new RandomImage();
         ric3.createArray();
         double [][] d2 = ric3.getPixelArray();
         ric3.createImage(d2);
@@ -60,7 +60,7 @@ class RandomImageCreatorTest {
      */
     @Test
     void imagePopulationTest() {
-        RandomImageCreator ric4 = new RandomImageCreator();
+        RandomImage ric4 = new RandomImage();
         ric4.createArray();
         double [][] d1 = ric4.getPixelArray();
         ric4.createImage(d1);

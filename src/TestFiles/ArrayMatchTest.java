@@ -1,7 +1,7 @@
 package TestFiles;
 
 import ApplicationFiles.InputImage;
-import ApplicationFiles.RandomImageCreator;
+import ApplicationFiles.RandomImage;
 import org.junit.jupiter.api.Test;
 
 import javax.imageio.ImageIO;
@@ -10,7 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ArrayMatchTest {
 
@@ -21,7 +21,7 @@ class ArrayMatchTest {
      */
     @Test
     void arrayMatchTest() throws IOException {
-        RandomImageCreator ric = new RandomImageCreator();
+        RandomImage ric = new RandomImage();
         ric.createArray();
         double[][] pa = ric.getPixelArray();
         ric.createImage(pa);

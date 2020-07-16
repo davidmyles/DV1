@@ -6,37 +6,10 @@ import org.apache.commons.math3.linear.RealMatrix;
 import java.util.Arrays;
 import java.util.stream.DoubleStream;
 
-/**
- * Creates RealMatrix objects from an Array
- */
-public class CreateRealMatrix {
+public class ArrayProcessor {
 
-    Array2DRowRealMatrix imageMatrix;
-    Array2DRowRealMatrix trainingMatrix;
     Array2DRowRealMatrix pcMatrix;
     private double[][] weightsTable;
-
-
-    /**
-     * Takes an array as a parameter and creates a RealMatrix with the array values
-     */
-    public void CreateImageRealMatrix(double[][] imageInputArray) {
-        imageMatrix = new Array2DRowRealMatrix(imageInputArray);
-    }
-
-    /**
-     * Creates a blank RealMatrix
-     */
-    public void CreateTrainingRealMatrix(int row, int column) {
-        trainingMatrix = new Array2DRowRealMatrix(row, column);
-    }
-
-    /**
-     * Takes a blank RealMatrix and 1D array as parameters. Inserts the array values into the matrix at the specified row
-     */
-    public void PopulateTrainingMatrix(Array2DRowRealMatrix baseMatrix, double[] inputArray, int column) {
-        baseMatrix.setColumn(column, inputArray);
-    }
 
     /**
      * Parameter is a populated matrix. Average value for elements in each row are calculated, with a new column for
@@ -88,10 +61,35 @@ public class CreateRealMatrix {
         return d2;
     }
 
+    /**
+     * Creates a blank Matrix to be receive columns of pixel weight data
+     */
     public void createPCMatrix()    {
         pcMatrix = new Array2DRowRealMatrix(9,6);
     }
 
+    /**
+     * Takes a normalised pixel array and matrix of matching principle components. The columns of the 2D array are split
+     * into a series of 3 x 1D arrays, each representing an image. Each column element is multiplied by the 1st principle
+     * component to create a new column of pixel weightings. This is repeated for each column using the 2nd principle
+     * component. The result is 6 columns (3 images x 2 principle components), which are placed in a new matrix.
+     */
+    public void calculateImageWeights(double[][] inputArray, RealMatrix principleComponents, int x, int y, int z) {
+        double [] columnArray = new double[inputArray.length];
+        double [][] matrixArray = principleComponents.getData();
+        for (int i = 0; i < inputArray.length; i++) {
+            columnArray[i] = inputArray[i][x];
+        }
+        for (int i = 0; i < columnArray.length; i++) {
+            columnArray[i] = columnArray[i]*matrixArray[i][y];
+            pcMatrix.setColumn(z,columnArray);
+        }
+    }
+
+    /**
+     * Parameter is the matrix containing pixel weightings. It is turned into an array, and a new array created with 1
+     * extra row. Elements are transferred to new array, and the sum of each column added to extra row.
+     */
     public double [][] createWeightsArray(RealMatrix weightedMatrix)    {
         double [][] weightsArray1 = weightedMatrix.getData();
         double [][] weightsArray2 = new double [weightsArray1.length+1][weightsArray1[0].length];
@@ -114,6 +112,10 @@ public class CreateRealMatrix {
         return weightsArray2;
     }
 
+    /**
+     * Parameter is weighted array with column totals. The total values are moved to a new (transposed) matrix, giving
+     * 2 weightings for each image
+     */
     public void createWeightsTable(double [][] inputArray)  {
         weightsTable = new double[3][2];
         weightsTable[0][0] = inputArray[9][0];
@@ -124,48 +126,18 @@ public class CreateRealMatrix {
         weightsTable[2][1] = inputArray[9][5];
     }
 
-    public void calculateImageWeights(double[][] inputArray, RealMatrix principleComponents, int x, int y, int z) {
-        double [] columnArray = new double[inputArray.length];
-        double [][] matrixArray = principleComponents.getData();
-            for (int i = 0; i < inputArray.length; i++) {
-                columnArray[i] = inputArray[i][x];
-            }
-            for (int i = 0; i < columnArray.length; i++) {
-                columnArray[i] = columnArray[i]*matrixArray[i][y];
-                pcMatrix.setColumn(z,columnArray);
-            }
-        }
-
-        /**
-         * Takes a 1D array and uses to populate a parameter-specified row of a RealMatrix
-         */
-        public void addImageDataset ( int row, double[] trainingInputArray){
-            trainingMatrix.setRow(row, trainingInputArray);
-        }
-
-        public RealMatrix getPCMatrix() {
-            return pcMatrix;
-        }
-
-        public double[][] getWeightsTable() {
-            return weightsTable;
-        }
-
-        /**
-         * Accessor for matching image RealMatrix object
-         */
-        public Array2DRowRealMatrix getImageMatrix () {
-            return imageMatrix;
-        }
-
-        /**
-         * Accessor for training image RealMatrix object
-         */
-        public Array2DRowRealMatrix getTrainingMatrix () {
-            return trainingMatrix;
-        }
+    /**
+     * Accessor for blank Matrix
+     */
+    public RealMatrix getPCMatrix() {
+        return pcMatrix;
     }
 
+    /**
+     * Accessor for final image weights table
+     */
+    public double[][] getWeightsTable() {
+        return weightsTable;
+    }
 
-
-
+}

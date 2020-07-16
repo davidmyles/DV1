@@ -14,12 +14,12 @@ public class TrainingDriver2 {
     static double[] d1a;
     static double[] d2a;
     static double[] d3a;
-    static RandomImageCreator ric1;
-    static RandomImageCreator ric2;
-    static RandomImageCreator ric3;
+    static RandomImage ric1;
+    static RandomImage ric2;
+    static RandomImage ric3;
 
     public static void runImageDriver2() throws SQLException {
-        RandomImageCreator ric1 = new RandomImageCreator();
+        RandomImage ric1 = new RandomImage();
         ric1.createArray();
         double[][] d1 = ric1.getPixelArray();
         System.out.println(Arrays.deepToString(d1));
@@ -34,7 +34,7 @@ public class TrainingDriver2 {
             e.printStackTrace();
         }
 
-        RandomImageCreator ric2 = new RandomImageCreator();
+        RandomImage ric2 = new RandomImage();
         ric2.createArray();
         double[][] d2 = ric2.getPixelArray();
         System.out.println(Arrays.deepToString(d2));
@@ -49,7 +49,7 @@ public class TrainingDriver2 {
             e.printStackTrace();
         }
 
-        RandomImageCreator ric3 = new RandomImageCreator();
+        RandomImage ric3 = new RandomImage();
         ric3.createArray();
         double[][] d3 = ric3.getPixelArray();
         System.out.println(Arrays.deepToString(d3));
