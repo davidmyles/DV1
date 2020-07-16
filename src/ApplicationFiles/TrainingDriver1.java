@@ -45,28 +45,35 @@ public class TrainingDriver1 {
         runTrainingDriver1b("/Users/davidjmyles/IdeaProjects/DV1/trainingimages1/img_02.png", baseMatrix, 1);
         runTrainingDriver1b("/Users/davidjmyles/IdeaProjects/DV1/trainingimages1/img_03.png", baseMatrix, 2);
         crm.getAvgValues(baseMatrix);
-        System.out.println(Arrays.deepToString(baseMatrix.getData()));
+        //System.out.println(Arrays.deepToString(baseMatrix.getData()));
         crm.applyAvgValues(baseMatrix);
-        System.out.println(Arrays.deepToString(baseMatrix.getData()));
+        //System.out.println(Arrays.deepToString(baseMatrix.getData()));
         crm.finaliseAvgValues(baseMatrix);
         CreateSVD csvd = new CreateSVD();
         double [][] d1 = crm.finaliseAvgValues(baseMatrix);
+        System.out.println("D1: " + Arrays.deepToString(d1));
         crm.CreateImageRealMatrix(d1);
         Array2DRowRealMatrix a2rrm = crm.getTrainingMatrix();
         csvd.CreateTrainingSVD(a2rrm);
         SingularValueDecomposition svd = csvd.getTrainingSVD();
-        //RealMatrix d2 = svd.getS();
-        //double [] d3 = svd.getSingularValues();
-        RealMatrix d4 = svd.getUT();
-        crm.createImageWeightsArray(d1);
-        double [][] normalisedArray = crm.createImageWeightsArray(d1);
-        crm.calculateImageWeights(d1,normalisedArray,d4,0);
-        double [][] d5 = crm.getImageWeightsArray();
-        //RealMatrix d5 = svd.getU();
-        //System.out.println(Arrays.deepToString(d2.getData()));
-        System.out.println(Arrays.deepToString(d4.getData()));
-        //System.out.println(Arrays.deepToString(d5.getData()));
-        //System.out.println(Arrays.toString(d3));
+        RealMatrix r1 = svd.getU();
+        System.out.println("Raw Principle Components: " + Arrays.deepToString(r1.getData()));
+        crm.createPCMatrix();
+        crm.calculateImageWeights(d1,r1,0, 0, 0);
+        crm.calculateImageWeights(d1,r1,0, 1, 1);
+        crm.calculateImageWeights(d1,r1,1, 0, 2);
+        crm.calculateImageWeights(d1,r1,1, 1, 3);
+        crm.calculateImageWeights(d1,r1,2, 0, 4);
+        crm.calculateImageWeights(d1,r1,2, 1, 5);
+        RealMatrix r2 = crm.getPCMatrix();
+        System.out.println("Calculated Principle Components: " + Arrays.deepToString(r2.getData()));
+        double[][] d5 = crm.createWeightsArray(r2);
+        System.out.println("Weights Array: " + Arrays.deepToString(d5));
+        crm.createWeightsTable(d5);
+        double [][] d6 = crm.getWeightsTable();
+        System.out.println("Weights Table: " + Arrays.deepToString(d6));
+
+
 
     }
 }
