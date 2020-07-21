@@ -1,7 +1,6 @@
 package ApplicationFiles;
 
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
-import org.apache.commons.math3.linear.RealMatrix;
 
 /**
  * Creates RealMatrix objects from an Array
@@ -35,39 +34,27 @@ public class ImageMatrix {
         baseMatrix.setColumn(column, inputArray);
     }
 
-    public void calculateImageWeights(double[][] inputArray, RealMatrix principleComponents, int x, int y, int z) {
-        double [] columnArray = new double[inputArray.length];
-        double [][] matrixArray = principleComponents.getData();
-            for (int i = 0; i < inputArray.length; i++) {
-                columnArray[i] = inputArray[i][x];
-            }
-            for (int i = 0; i < columnArray.length; i++) {
-                columnArray[i] = columnArray[i]*matrixArray[i][y];
-                pcMatrix.setColumn(z,columnArray);
-            }
-        }
-
-        /**
-         * Takes a 1D array and uses to populate a parameter-specified row of a RealMatrix
-         */
-        public void addImageDataset ( int row, double[] trainingInputArray){
-            trainingMatrix.setRow(row, trainingInputArray);
-        }
-
-        /**
-         * Accessor for matching image RealMatrix object
-         */
-        public Array2DRowRealMatrix getImageMatrix () {
-            return imageMatrix;
-        }
-
-        /**
-         * Accessor for training image RealMatrix object
-         */
-        public Array2DRowRealMatrix getTrainingMatrix () {
-            return trainingMatrix;
-        }
+    /**
+     * Takes a 1D array and uses to populate a parameter-specified row of a RealMatrix
+     */
+    public void addImageDataset ( int row, double[] trainingInputArray){
+        trainingMatrix.setRow(row, trainingInputArray);
     }
+
+    /**
+     * Accessor for matching image RealMatrix object
+     */
+    public Array2DRowRealMatrix getImageMatrix () {
+        return imageMatrix;
+    }
+
+    /**
+     * Accessor for training image RealMatrix object
+     */
+    public Array2DRowRealMatrix getTrainingMatrix () {
+        return trainingMatrix;
+    }
+}
 
 
 

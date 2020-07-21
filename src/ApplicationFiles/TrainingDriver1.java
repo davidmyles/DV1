@@ -7,6 +7,7 @@ import org.apache.commons.math3.linear.SingularValueDecomposition;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Arrays;
 
 public class TrainingDriver1 {
@@ -39,16 +40,22 @@ public class TrainingDriver1 {
         im.PopulateTrainingMatrix(baseMatrix, d2, row);
     }
 
-    public static void main(String args[]) {
+
+
+
+    public static void main(String args[]) throws SQLException {
         runTrainingDriver1a();
         runTrainingDriver1b("/Users/davidjmyles/IdeaProjects/DV1/trainingimages1/img_01.png", baseMatrix, 0);
         runTrainingDriver1b("/Users/davidjmyles/IdeaProjects/DV1/trainingimages1/img_02.png", baseMatrix, 1);
         runTrainingDriver1b("/Users/davidjmyles/IdeaProjects/DV1/trainingimages1/img_03.png", baseMatrix, 2);
         ArrayProcessor ap = new ArrayProcessor();
+        LinkSQL ls = new LinkSQL();
         ap.getAvgValues(baseMatrix);
-        //System.out.println(Arrays.deepToString(baseMatrix.getData()));
+        double[][] dx = ap.getArrayFromMatrix(baseMatrix);
+        ls.savePixelAveragesToDB(dx);
+        System.out.println(Arrays.deepToString(baseMatrix.getData()));
         ap.applyAvgValues(baseMatrix);
-        //System.out.println(Arrays.deepToString(baseMatrix.getData()));
+        System.out.println(Arrays.deepToString(baseMatrix.getData()));
         ap.finaliseAvgValues(baseMatrix);
         SVD svd = new SVD();
         double [][] d1 = ap.finaliseAvgValues(baseMatrix);
@@ -58,6 +65,8 @@ public class TrainingDriver1 {
         svd.CreateTrainingSVD(a2rrm);
         SingularValueDecomposition svd1 = svd.getTrainingSVD();
         RealMatrix r1 = svd1.getU();
+        double[][] dz = ap.getArrayFromMatrix(r1);
+        ls.savePrincipleComponentsToDB(dz);
         System.out.println("Raw Principle Components: " + Arrays.deepToString(r1.getData()));
         ap.createPCMatrix();
         ap.calculateImageWeights(d1,r1,0, 0, 0);
@@ -73,6 +82,7 @@ public class TrainingDriver1 {
         ap.createWeightsTable(d5);
         double [][] d6 = ap.getWeightsTable();
         System.out.println("Weights Table: " + Arrays.deepToString(d6));
+        ls.saveWeightsTableToDB(d6);
 
 
 

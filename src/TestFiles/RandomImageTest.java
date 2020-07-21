@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * Tests for creation of initial array and subsequent image from RandomImageCreator class
  */
-class RandomImageCreatorTest {
+class RandomImageTest {
 
     /**
      * Creates array and tests that it has the correct dimensions

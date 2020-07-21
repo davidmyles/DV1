@@ -26,6 +26,11 @@ public class ArrayProcessor {
         return baseMatrix;
     }
 
+    public double [][] getArrayFromMatrix(RealMatrix inputMatrix)  {
+        double [][] outputArray = inputMatrix.getData();
+        return outputArray;
+    }
+
     /**
      * Takes the average row value and subtracts from each element in that row
      */

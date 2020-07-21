@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * Test for SVD creation from CreateSVD class
  */
-class CreateSVDTest {
+class SVDTest {
 
     /**
      * Creates array and RealMatrix. Creates SVD object using RealMatrix. Tests that an output array containing
