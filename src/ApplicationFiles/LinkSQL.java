@@ -1,11 +1,10 @@
 package ApplicationFiles;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class LinkSQL {
+
+    private String matchResult;
 
     public void savePixelAveragesToDB(double [][]inputArray) throws SQLException {
         Connection conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/XEPDB1", "byb19169", "1234567899");
@@ -116,6 +115,41 @@ public class LinkSQL {
         ps3.setDouble(2, weightsArray[2][0]);
         ps3.setDouble(3, weightsArray[2][1]);
         ps3.executeUpdate();
+        conn.close();
+    }
+
+    public void saveUnkownWeightsToDB(double[][] weightsArray) throws SQLException {
+        Connection conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/XEPDB1", "byb19169", "1234567899");
+        PreparedStatement ps1 = conn.prepareStatement("insert into unknown_weights (unknown_image_id, unknown_weight_1, unknown_weight_2) values (?,?,?)");
+        ps1.setString(1, "unknown_1");
+        ps1.setDouble(2, weightsArray[0][0]);
+        ps1.setDouble(3, weightsArray[0][1]);
+        ps1.executeUpdate();
+        conn.close();
+    }
+
+    public String matchImage() throws SQLException {
+        Connection conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/XEPDB1", "byb19169", "1234567899");
+        String sql = "SELECT IMAGE_ID\n" +
+                     "FROM weights, unknown_weights\n" +
+                     "WHERE (((weight_1-unknown_weight_1)*(weight_1-unknown_weight_1)) + ((weight_2-unknown_weight_2)*(weight_2-unknown_weight_2))) =\n" +
+                     "(SELECT MIN(((weight_1 - unknown_weight_1)*(weight_1 - unknown_weight_1)) + ((weight_2 - unknown_weight_2)*(weight_2 - unknown_weight_2))) FROM WEIGHTS, UNKNOWN_WEIGHTS)\n" +
+                     "GROUP BY IMAGE_ID";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ResultSet r1 = ps.executeQuery();
+        while (r1.next())   {
+            String matchResult = r1.getString(1);
+            System.out.println(matchResult);
+            return matchResult;
+        }
+        conn.close();
+        return matchResult;
+    }
+
+    public void clearUnknownImageWeights() throws SQLException  {
+        Connection conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/XEPDB1", "byb19169", "1234567899");
+        PreparedStatement ps = conn.prepareStatement("DELETE from unknown_weights");
+        ps.executeUpdate();
         conn.close();
     }
 }
