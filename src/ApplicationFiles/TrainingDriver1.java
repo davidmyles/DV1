@@ -50,9 +50,10 @@ public class TrainingDriver1 {
         runTrainingDriver1b("/Users/davidjmyles/IdeaProjects/DV1/trainingimages1/img_03.png", baseMatrix, 2);
         ArrayProcessor ap = new ArrayProcessor();
         LinkSQL ls = new LinkSQL();
-        ap.getAvgValues(baseMatrix);
+        ap.getAvgValues(baseMatrix, 3);
         double[][] dx = ap.getArrayFromMatrix(baseMatrix);
-        ls.savePixelAveragesToDB(dx);
+        double [] dz = ap.getAvgValuesArray(dx);
+        ls.savePixelAveragesToDB(dz);
         System.out.println(Arrays.deepToString(baseMatrix.getData()));
         ap.applyAvgValues(baseMatrix);
         System.out.println(Arrays.deepToString(baseMatrix.getData()));
@@ -65,10 +66,10 @@ public class TrainingDriver1 {
         svd.CreateTrainingSVD(a2rrm);
         SingularValueDecomposition svd1 = svd.getTrainingSVD();
         RealMatrix r1 = svd1.getU();
-        double[][] dz = ap.getArrayFromMatrix(r1);
-        ls.savePrincipleComponentsToDB(dz);
+        double[][] dc = ap.getArrayFromMatrix(r1);
+        ls.savePrincipleComponentsToDB(dc);
         System.out.println("Raw Principle Components: " + Arrays.deepToString(r1.getData()));
-        ap.createPCMatrix();
+        ap.createPCMatrix(9,6);
         ap.calculateImageWeights(d1,r1,0, 0, 0);
         ap.calculateImageWeights(d1,r1,0, 1, 1);
         ap.calculateImageWeights(d1,r1,1, 0, 2);
@@ -79,10 +80,10 @@ public class TrainingDriver1 {
         System.out.println("Calculated Principle Components: " + Arrays.deepToString(r2.getData()));
         double[][] d5 = ap.createWeightsArray(r2);
         System.out.println("Weights Array: " + Arrays.deepToString(d5));
-        ap.createWeightsTable(d5);
+        ap.createWeightsTable(d5,2);
         double [][] d6 = ap.getWeightsTable();
         System.out.println("Weights Table: " + Arrays.deepToString(d6));
-        ls.saveWeightsTableToDB(d6);
+        ls.saveWeightsTableToDBx2PC(d6);
 
 
 

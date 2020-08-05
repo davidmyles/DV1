@@ -11,8 +11,8 @@ import java.util.stream.Stream;
  */
 public class RandomImage {
 
-    public int w = 3;
-    public int h = 3;
+    public int w = 50;
+    public int h = 50;
     double[][] pixelArray;
     double [] flatArray;
     Random random = new Random();

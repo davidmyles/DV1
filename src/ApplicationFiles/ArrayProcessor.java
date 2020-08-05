@@ -15,12 +15,12 @@ public class ArrayProcessor {
      * Parameter is a populated matrix. Average value for elements in each row are calculated, with a new column for
      * average row values added at the end of existing matrix
      */
-    public Array2DRowRealMatrix getAvgValues(Array2DRowRealMatrix baseMatrix) {
+    public Array2DRowRealMatrix getAvgValues(Array2DRowRealMatrix baseMatrix, int divider) {
         int a = baseMatrix.getColumnDimension() - 1;
         int b = baseMatrix.getRowDimension();
         for (int i = 0; i < b; i++) {
             double[] c = baseMatrix.getRow(i);
-            int d = ((int) DoubleStream.of(c).sum() / 3);
+            int d = ((int) DoubleStream.of(c).sum() / divider);
             baseMatrix.addToEntry(i, a, d);
         }
         return baseMatrix;
@@ -28,6 +28,16 @@ public class ArrayProcessor {
 
     public double [][] getArrayFromMatrix(RealMatrix inputMatrix)  {
         double [][] outputArray = inputMatrix.getData();
+        return outputArray;
+    }
+
+    public double [] getAvgValuesArray (double [][] inputArray)   {
+        int a = inputArray.length;
+        int b = inputArray[0].length-1;
+        double [] outputArray = new double [a];
+            for (int i = 0; i < a; i++) {
+                outputArray[i] = inputArray[i][b];
+            }
         return outputArray;
     }
 
@@ -69,8 +79,8 @@ public class ArrayProcessor {
     /**
      * Creates a blank Matrix to be receive columns of pixel weight data
      */
-    public void createPCMatrix()    {
-        pcMatrix = new Array2DRowRealMatrix(9,6);
+    public void createPCMatrix(int rows, int columns)    {
+        pcMatrix = new Array2DRowRealMatrix(rows,columns);
     }
 
     /**
@@ -118,17 +128,28 @@ public class ArrayProcessor {
     }
 
     /**
-     * Parameter is weighted array with column totals. The total values are moved to a new (transposed) matrix, giving
-     * 2 weightings for each image
+     *
+     *
+     * 'lastRow' calculation taken from user compski on Stack Overflow page:
+     *  https://stackoverflow.com/questions/5134555/how-to-convert-a-1d-array-to-2d-array
      */
-    public void createWeightsTable(double [][] inputArray)  {
-        weightsTable = new double[3][2];
-        weightsTable[0][0] = inputArray[9][0];
-        weightsTable[0][1] = inputArray[9][1];
-        weightsTable[1][0] = inputArray[9][2];
-        weightsTable[1][1] = inputArray[9][3];
-        weightsTable[2][0] = inputArray[9][4];
-        weightsTable[2][1] = inputArray[9][5];
+    public double [][] createWeightsTable(double [][] inputArray, int noOfPC)    {
+        int a = inputArray.length;
+        int b = inputArray[0].length;
+        weightsTable = new double [b/noOfPC][noOfPC];
+        double [] lastRow = new double [b];
+        for (int i = 0; i < b; i++) {
+            lastRow[i] = inputArray[a-1][i];
+        }
+        System.out.println("last row: " + Arrays.toString(lastRow));
+        int y = weightsTable.length;
+        int x = weightsTable[0].length;
+        for(int i = 0; i < y; i++) {
+            for (int j = 0; j < x; j++) {
+                weightsTable[i][j] = lastRow[j%x+i*x];
+            }
+        }
+        return weightsTable;
     }
 
     /**
