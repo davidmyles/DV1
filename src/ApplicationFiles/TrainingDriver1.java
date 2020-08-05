@@ -37,7 +37,7 @@ public class TrainingDriver1 {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        im.PopulateTrainingMatrix(baseMatrix, d2, row);
+        im.populateTrainingMatrix(baseMatrix, d2, row);
     }
 
 

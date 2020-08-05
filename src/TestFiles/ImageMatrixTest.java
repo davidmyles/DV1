@@ -64,8 +64,8 @@ class ImageMatrixTest {
         int x = d2.length;
         crm.CreateTrainingRealMatrix(x, 3);
         Array2DRowRealMatrix a2rrm = crm.getTrainingMatrix();
-        crm.PopulateTrainingMatrix(a2rrm, d2, 0);
-        crm.PopulateTrainingMatrix(a2rrm, d4, 1);
+        crm.populateTrainingMatrix(a2rrm, d2, 0);
+        crm.populateTrainingMatrix(a2rrm, d4, 1);
         assertEquals(d2[2], a2rrm.getEntry(2,0));
         assertEquals(d2[4], a2rrm.getEntry(4,0));
         assertEquals(d2[6], a2rrm.getEntry(6,0));

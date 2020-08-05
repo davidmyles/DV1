@@ -30,7 +30,7 @@ public class ImageMatrix {
     /**
      * Takes a blank RealMatrix and 1D array as parameters. Inserts the array values into the matrix at the specified row
      */
-    public void PopulateTrainingMatrix(Array2DRowRealMatrix baseMatrix, double[] inputArray, int column) {
+    public void populateTrainingMatrix(Array2DRowRealMatrix baseMatrix, double[] inputArray, int column) {
         baseMatrix.setColumn(column, inputArray);
     }
 

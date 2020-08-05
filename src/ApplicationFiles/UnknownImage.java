@@ -25,7 +25,6 @@ public class UnknownImage {
         RandomImage ri = new RandomImage();
         ri.flattenArray(d1);
         d2 = ri.getFlatArray();
-        System.out.println("original pixels" + Arrays.toString(d2));
         return d2;
     }
 
@@ -45,7 +44,6 @@ public class UnknownImage {
         for (int i = 0; i < d1.length; i++) {
             d1[i] = d3.get(i);
         }
-        System.out.println("average values from db" + Arrays.toString(d1));
         return d1;
     }
 
@@ -57,38 +55,13 @@ public class UnknownImage {
         for (int i = 0; i < pixels.length; i++) {
             pixels[i] = pixels[i] - avgValues[i];
         }
-        System.out.println("normalised pixel values" + Arrays.toString(pixels));
         return pixels;
     }
 
-    public static Array2DRowRealMatrix retrievePrincipleComponentsx2() throws SQLException {
-        ArrayList<Double> d1 = new ArrayList<>();
-        ArrayList<Double> d2 = new ArrayList<>();
-        Connection conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/XEPDB1", "byb19169", "1234567899");
-        PreparedStatement ps = conn.prepareStatement("SELECT PC_1, PC_2 FROM principle_components");
-        ResultSet r1 = ps.executeQuery();
-        while (r1.next()) {
-            double p1 = r1.getDouble(1);
-            d1.add(p1);
-            double p2 = r1.getDouble(2);
-            d2.add(p2);
-        }
-        Array2DRowRealMatrix rM = new Array2DRowRealMatrix(d1.size(),2);
-        double[] d3 = new double[d1.size()];
-            for (int i = 0; i < d3.length; i++) {
-            d3[i] = d1.get(i);
-        }
-        double[] d4 = new double[d2.size()];
-            for (int i = 0; i < d3.length; i++)    {
-            d4[i] = d2.get(i);
-        }
-        rM.setColumn(0, d3);
-        rM.setColumn(1, d4);
-        System.out.println("principle components" + Arrays.deepToString(rM.getData()));
-        return rM;
-    }
-
-
+    /**
+     * Retrieves the 4 x principle component (per pixel) values from the database. These are processed and then placed
+     * in a matrix (1 column per vector) which is returned.
+     */
     public static Array2DRowRealMatrix retrievePrincipleComponentsx4() throws SQLException {
         ArrayList<Double> d1 = new ArrayList<>();
         ArrayList<Double> d2 = new ArrayList<>();
@@ -128,10 +101,14 @@ public class UnknownImage {
         rM.setColumn(1, d2a);
         rM.setColumn(2, d3a);
         rM.setColumn(3, d4a);
-        System.out.println("principle components" + Arrays.deepToString(rM.getData()));
         return rM;
     }
 
+    /**
+     * Takes an array of pixels, the vector matrix and a blank matrix. The pixels in the array are each multiplied by
+     * the corresponding values from the vectors. The returned matrix contains a column of multiplied pixel values for
+     * each vector
+     */
     public static Array2DRowRealMatrix unknownImageWeightsPC(double [] pixelArray, Array2DRowRealMatrix pc, Array2DRowRealMatrix blankMatrix, int x)   {
         double [] columnArray = new double[pixelArray.length];
         double [][] matrixArray = pc.getData();
@@ -145,6 +122,10 @@ public class UnknownImage {
         return blankMatrix;
     }
 
+    /**
+     * Takes an array with the sum of each vector column contained in the final row. This final row is moved into a new
+     * single row array for matching with stored weights from the database.
+     */
     public static double [][] createUnknownWeightsTable(double [][] inputArray, int pc)  {
         double [][] weightsTable = new double[1][pc];
         int a = inputArray.length-1;
@@ -155,15 +136,25 @@ public class UnknownImage {
         return weightsTable;
     }
 
+    /**
+     * Creates a blank matrix of defined dimensions for storing vector data accessed from the database
+     */
     public static Array2DRowRealMatrix createPCMatrix(int pixels, int pc)    {
         weightsMatrix = new Array2DRowRealMatrix(pixels,pc);
         return weightsMatrix;
     }
 
+    /**
+     * Accessor for matrix containing vectors
+     */
     public static Array2DRowRealMatrix getWeightsMatrix()  {
         return weightsMatrix;
     }
 
+    /**
+     * Driver method for matching unknown image. Image is normalised and pixel values multiplied by training vectors.
+     * The resulting weights are compared with stored image weights to generate a match
+     */
     public static void runUnknownImageMatch(String filepath,int width,int height) throws SQLException, IOException {
         LinkSQL ls = new LinkSQL();
         ls.clearUnknownImageWeights();
@@ -176,18 +167,16 @@ public class UnknownImage {
         unknownImageWeightsPC(p3,rm,rm2,1);
         unknownImageWeightsPC(p3,rm,rm2,2);
         unknownImageWeightsPC(p3,rm,rm2,3);
-        //System.out.println("Weights matrix" + Arrays.deepToString(rm2.getData()));
         ArrayProcessor ap = new ArrayProcessor();
         double [][] p4 = ap.createWeightsArray(rm2);
-        //System.out.println("Weights matrix with sum" + Arrays.deepToString(p4));
         double [][] p5 = createUnknownWeightsTable(p4,4);
-        //System.out.println("Weights for unknown image" + Arrays.deepToString(p5));
+        System.out.println("Weights for unknown image" + Arrays.deepToString(p5));
         ls.saveUnkownWeightsToDBx4PC(p5);
         ls.matchImage();
     }
 
 
     public static void main(String args[]) throws SQLException, IOException {
-        runUnknownImageMatch("/Users/davidjmyles/IdeaProjects/DV1/trainingimages3/img_03.png", 50, 50);
+        runUnknownImageMatch("/Users/davidjmyles/IdeaProjects/DV1/trainingimages3/img_01.png", 50, 50);
     }
 }
