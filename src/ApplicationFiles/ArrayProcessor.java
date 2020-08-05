@@ -3,7 +3,6 @@ package ApplicationFiles;
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 import org.apache.commons.math3.linear.RealMatrix;
 
-import java.util.Arrays;
 import java.util.stream.DoubleStream;
 
 public class ArrayProcessor {
@@ -72,7 +71,7 @@ public class ArrayProcessor {
                 d2[i][j] = d1[i][j];
             }
         }
-        System.out.println(Arrays.deepToString(d2));
+        //System.out.println(Arrays.deepToString(d2));
         return d2;
     }
 
@@ -141,7 +140,7 @@ public class ArrayProcessor {
         for (int i = 0; i < b; i++) {
             lastRow[i] = inputArray[a-1][i];
         }
-        System.out.println("last row: " + Arrays.toString(lastRow));
+        //System.out.println("last row: " + Arrays.toString(lastRow));
         int y = weightsTable.length;
         int x = weightsTable[0].length;
         for(int i = 0; i < y; i++) {

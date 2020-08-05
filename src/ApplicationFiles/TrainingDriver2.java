@@ -51,7 +51,6 @@ public class TrainingDriver2 {
         runTrainingDriver2b("/Users/davidjmyles/IdeaProjects/DV1/trainingimages3/img_09.png", baseMatrix, 8);
         ArrayProcessor ap = new ArrayProcessor();
         LinkSQL ls = new LinkSQL();
-        ls.resetWeightsImageID();
         ls.clearAvgValues();
         ls.clearPrincipleComponentsX2();
         ls.clearUnknownImageWeights();
@@ -59,11 +58,11 @@ public class TrainingDriver2 {
         ap.getAvgValues(baseMatrix,9);
         double[][] dx = ap.getArrayFromMatrix(baseMatrix);
         double [] dz = ap.getAvgValuesArray(dx);
-        System.out.println("Avg values list: " + Arrays.toString(dz));
+        //System.out.println("Avg values list: " + Arrays.toString(dz));
         ls.savePixelAveragesToDB(dz);
-        System.out.println("Avg values added: " + Arrays.deepToString(baseMatrix.getData()));
+        //System.out.println("Avg values added: " + Arrays.deepToString(baseMatrix.getData()));
         ap.applyAvgValues(baseMatrix);
-        System.out.println("Avg values applied: " + Arrays.deepToString(baseMatrix.getData()));
+        //System.out.println("Avg values applied: " + Arrays.deepToString(baseMatrix.getData()));
         ap.finaliseAvgValues(baseMatrix);
         SVD svd = new SVD();
         double [][] d1 = ap.finaliseAvgValues(baseMatrix);
@@ -75,7 +74,7 @@ public class TrainingDriver2 {
         RealMatrix r1 = svd1.getU();
         double[][] dc = ap.getArrayFromMatrix(r1);
         ls.savePrincipleComponentsToDB(dc);
-        System.out.println("Raw Principle Components: " + Arrays.deepToString(r1.getData()));
+        //System.out.println("Raw Principle Components: " + Arrays.deepToString(r1.getData()));
         ap.createPCMatrix(2500,36);
         ap.calculateImageWeights(d1,r1,0, 0, 0);
         ap.calculateImageWeights(d1,r1,0, 1, 1);
@@ -114,12 +113,12 @@ public class TrainingDriver2 {
         ap.calculateImageWeights(d1,r1,8, 2, 34);
         ap.calculateImageWeights(d1,r1,8, 3, 35);
         RealMatrix r2 = ap.getPCMatrix();
-        System.out.println("Calculated Principle Components: " + Arrays.deepToString(r2.getData()));
+        //System.out.println("Calculated Principle Components: " + Arrays.deepToString(r2.getData()));
         double[][] d5 = ap.createWeightsArray(r2);
-        System.out.println("Weights Array: " + Arrays.deepToString(d5));
+        //System.out.println("Weights Array: " + Arrays.deepToString(d5));
         ap.createWeightsTable(d5,4);
         double [][] d6 = ap.getWeightsTable();
-        System.out.println("Weights Table: " + Arrays.deepToString(d6));
-        ls.saveWeightsTableToDBx4PC(d6);
+        //System.out.println("Weights Table: " + Arrays.deepToString(d6));
+        ls.saveWeightsTableToDB(d6);
     }
 }

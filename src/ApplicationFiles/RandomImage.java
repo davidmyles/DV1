@@ -64,7 +64,9 @@ public class RandomImage {
         return pixelArray;
     }
 
-
+    /**
+     * Accessor for 1D array created from a 2D array input
+     */
     public double[] getFlatArray()  { return flatArray; }
 }
 
