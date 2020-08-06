@@ -1,6 +1,7 @@
 package ApplicationFiles;
 
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
+import org.apache.commons.math3.exception.NotStrictlyPositiveException;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -52,17 +53,18 @@ public class UnknownImage {
      * corresponding value in the pixel array. Pixel array is returned.
      */
     public static double[] applyAvgUnkown(double[] pixels, double[] avgValues) {
+        double [] d1 = new double [pixels.length];
         for (int i = 0; i < pixels.length; i++) {
-            pixels[i] = pixels[i] - avgValues[i];
+            d1[i] = pixels[i] - avgValues[i];
         }
-        return pixels;
+        return d1;
     }
 
     /**
      * Retrieves the 4 x principle component (per pixel) values from the database. These are processed and then placed
      * in a matrix (1 column per vector) which is returned.
      */
-    public static Array2DRowRealMatrix retrievePrincipleComponentsx4() throws SQLException {
+    public static Array2DRowRealMatrix retrievePrincipleComponentsx4() throws SQLException, NotStrictlyPositiveException  {
         ArrayList<Double> d1 = new ArrayList<>();
         ArrayList<Double> d2 = new ArrayList<>();
         ArrayList<Double> d3 = new ArrayList<>();
@@ -126,8 +128,8 @@ public class UnknownImage {
      * Takes an array with the sum of each vector column contained in the final row. This final row is moved into a new
      * single row array for matching with stored weights from the database.
      */
-    public static double [][] createUnknownWeightsTable(double [][] inputArray, int pc)  {
-        double [][] weightsTable = new double[1][pc];
+    public static double [][] createUnknownWeightsTable(double [][] inputArray)  {
+        double [][] weightsTable = new double[1][4];
         int a = inputArray.length-1;
         weightsTable[0][0] = inputArray[a][0];
         weightsTable[0][1] = inputArray[a][1];
@@ -139,8 +141,8 @@ public class UnknownImage {
     /**
      * Creates a blank matrix of defined dimensions for storing vector data accessed from the database
      */
-    public static Array2DRowRealMatrix createPCMatrix(int pixels, int pc)    {
-        weightsMatrix = new Array2DRowRealMatrix(pixels,pc);
+    public static Array2DRowRealMatrix createPCMatrix(int pixels)    {
+        weightsMatrix = new Array2DRowRealMatrix(pixels,4);
         return weightsMatrix;
     }
 
@@ -162,21 +164,21 @@ public class UnknownImage {
         double [] p2 = retrieveAvgValues();
         double [] p3 = applyAvgUnkown(p1,p2);
         Array2DRowRealMatrix rm = retrievePrincipleComponentsx4();
-        Array2DRowRealMatrix rm2 = createPCMatrix((width*height),4);
+        Array2DRowRealMatrix rm2 = createPCMatrix((width*height));
         unknownImageWeightsPC(p3,rm,rm2,0);
         unknownImageWeightsPC(p3,rm,rm2,1);
         unknownImageWeightsPC(p3,rm,rm2,2);
         unknownImageWeightsPC(p3,rm,rm2,3);
         ArrayProcessor ap = new ArrayProcessor();
         double [][] p4 = ap.createWeightsArray(rm2);
-        double [][] p5 = createUnknownWeightsTable(p4,4);
+        double [][] p5 = createUnknownWeightsTable(p4);
         System.out.println("Weights for unknown image" + Arrays.deepToString(p5));
-        ls.saveUnkownWeightsToDBx4PC(p5);
-        ls.matchImage();
+        ls.saveUnkownWeightsToDB(p5);
+        ls.matchImage4Vectors();
     }
 
 
     public static void main(String args[]) throws SQLException, IOException {
-        runUnknownImageMatch("/Users/davidjmyles/IdeaProjects/DV1/trainingimages3/img_01.png", 50, 50);
+        runUnknownImageMatch("/Users/davidjmyles/IdeaProjects/DV1/trainingimages3/img_01.png", 9, 9);
     }
 }

@@ -43,13 +43,12 @@ public class RandomImageTrainer     {
         ArrayProcessor ap = new ArrayProcessor();
         LinkSQL ls = new LinkSQL();
         ls.clearAvgValues();
-        ls.clearPrincipleComponentsX2();
+        ls.clearPrincipleComponents();
         ls.clearUnknownImageWeights();
         ls.clearWeights();
         ap.getAvgValues(baseMatrix,images);
-        double[][] dx = ap.getArrayFromMatrix(baseMatrix);
-        double [] dz = ap.getAvgValuesArray(dx);
-        ls.savePixelAveragesToDB(dz);
+        double[] dx = ap.getAvgValuesArrayForDB(baseMatrix);
+        ls.savePixelAveragesToDB(dx);
         ap.applyAvgValues(baseMatrix);
         ap.finaliseAvgValues(baseMatrix);
         SVD svd = new SVD();
@@ -59,7 +58,7 @@ public class RandomImageTrainer     {
         svd.CreateTrainingSVD(a2rrm);
         SingularValueDecomposition svd1 = svd.getTrainingSVD();
         RealMatrix r1 = svd1.getU();
-        double[][] dc = ap.getArrayFromMatrix(r1);
+        double[][] dc = r1.getData();
         ls.savePrincipleComponentsToDB(dc);
         ap.createPCMatrix(pixels,(images*4));
         ap.calculateImageWeights(d1,r1,0, 0, 0);
@@ -108,7 +107,7 @@ public class RandomImageTrainer     {
 
 
     public static void main(String args[]) throws SQLException {
-        runRandomImageTrainer1(2500, 9);
+        runRandomImageTrainer1(81, 9);
         runRandomImageTrainer2("/Users/davidjmyles/IdeaProjects/DV1/trainingimages3/img_01.png", baseMatrix, 0);
         runRandomImageTrainer2("/Users/davidjmyles/IdeaProjects/DV1/trainingimages3/img_02.png", baseMatrix, 1);
         runRandomImageTrainer2("/Users/davidjmyles/IdeaProjects/DV1/trainingimages3/img_03.png", baseMatrix, 2);
@@ -118,6 +117,6 @@ public class RandomImageTrainer     {
         runRandomImageTrainer2("/Users/davidjmyles/IdeaProjects/DV1/trainingimages3/img_07.png", baseMatrix, 6);
         runRandomImageTrainer2("/Users/davidjmyles/IdeaProjects/DV1/trainingimages3/img_08.png", baseMatrix, 7);
         runRandomImageTrainer2("/Users/davidjmyles/IdeaProjects/DV1/trainingimages3/img_09.png", baseMatrix, 8);
-        runRandomImageTrainer3(2500,9);
+        runRandomImageTrainer3(81,9);
     }
 }

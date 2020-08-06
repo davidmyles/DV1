@@ -54,7 +54,7 @@ public class LinkSQL {
     }
 
 
-    public void saveUnkownWeightsToDBx4PC(double[][] weightsArray) throws SQLException {
+    public void saveUnkownWeightsToDB(double[][] weightsArray) throws SQLException {
         Connection conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/XEPDB1", "byb19169", "1234567899");
         PreparedStatement ps1 = conn.prepareStatement("insert into unknown_weights (unknown_image_id, unknown_weight_1, unknown_weight_2, unknown_weight_3, unknown_weight_4) values (?,?,?,?,?)");
         ps1.setString(1, "unknown_1");
@@ -67,7 +67,7 @@ public class LinkSQL {
     }
 
 
-    public String matchImage() throws SQLException {
+    public String matchImage2Vectors() throws SQLException {
         Connection conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/XEPDB1", "byb19169", "1234567899");
         String sql = "SELECT IMAGE_ID\n" +
                      "FROM weights, unknown_weights\n" +
@@ -86,7 +86,26 @@ public class LinkSQL {
         return matchResult;
     }
 
-    public String matchImage2() throws SQLException {
+    public String matchImage3Vectors() throws SQLException {
+        Connection conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/XEPDB1", "byb19169", "1234567899");
+        String sql = "SELECT IMAGE_ID\n" +
+                "FROM weights, unknown_weights\n" +
+                "WHERE (((weight_1-unknown_weight_1)*(weight_1-unknown_weight_1)) + ((weight_2-unknown_weight_2)*(weight_2-unknown_weight_2)) + ((weight_3-unknown_weight_3)*(weight_3-unknown_weight_3)))=\n" +
+                "(SELECT MIN(((weight_1-unknown_weight_1)*(weight_1-unknown_weight_1)) + ((weight_2-unknown_weight_2)*(weight_2-unknown_weight_2)) + ((weight_3-unknown_weight_3)*(weight_3-unknown_weight_3)))\n" +
+                "FROM WEIGHTS, UNKNOWN_WEIGHTS)\n" +
+                "GROUP BY IMAGE_ID";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ResultSet r1 = ps.executeQuery();
+        while (r1.next()) {
+            String matchResult = r1.getString(1);
+            System.out.println("System Match With: Image " + matchResult);
+            return matchResult;
+        }
+        conn.close();
+        return matchResult;
+    }
+
+    public String matchImage4Vectors() throws SQLException {
         Connection conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/XEPDB1", "byb19169", "1234567899");
         String sql = "SELECT IMAGE_ID\n" +
                 "FROM weights, unknown_weights\n" +
@@ -118,7 +137,7 @@ public class LinkSQL {
         conn.close();
     }
 
-    public void clearPrincipleComponentsX2() throws SQLException  {
+    public void clearPrincipleComponents() throws SQLException  {
         Connection conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521/XEPDB1", "byb19169", "1234567899");
         PreparedStatement ps = conn.prepareStatement("DELETE from principle_components");
         ps.executeUpdate();

@@ -11,8 +11,8 @@ import java.util.stream.Stream;
  */
 public class RandomImage {
 
-    public int w = 50;
-    public int h = 50;
+    public int w = 9;
+    public int h = 9;
     double[][] pixelArray;
     double [] flatArray;
     Random random = new Random();
@@ -31,6 +31,9 @@ public class RandomImage {
         }
     }
 
+    /**
+     * Takes a 2D array and turns into 1D array with the same values
+     */
     public void flattenArray(double [][] d1)  {
         flatArray = Stream.of(d1).flatMapToDouble(DoubleStream::of).toArray();
     }

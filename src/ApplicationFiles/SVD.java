@@ -13,12 +13,6 @@ public class SVD {
     private static SingularValueDecomposition trainingSVD;
     //Array2DRowRealMatrix imageArray;
 
-    /**
-     * Performs SVD on RealMatrix for input image
-     */
-    public void CreateImageSVD(Array2DRowRealMatrix imageArray)	{
-        imageSVD = new SingularValueDecomposition(imageArray);
-    }
 
     /**
      * Performs SVD on RealMatrix for training image
@@ -28,12 +22,6 @@ public class SVD {
         trainingSVD = new SingularValueDecomposition(trainingArray);
     }
 
-    /**
-     * Accessor for input SVD object
-     */
-    public static SingularValueDecomposition getImageSVD()	{
-        return imageSVD;
-    }
 
     /**
      * Accessor for training SVD object

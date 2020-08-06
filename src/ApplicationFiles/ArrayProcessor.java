@@ -25,18 +25,11 @@ public class ArrayProcessor {
         return baseMatrix;
     }
 
-    public double [][] getArrayFromMatrix(RealMatrix inputMatrix)  {
-        double [][] outputArray = inputMatrix.getData();
-        return outputArray;
-    }
-
-    public double [] getAvgValuesArray (double [][] inputArray)   {
-        int a = inputArray.length;
-        int b = inputArray[0].length-1;
-        double [] outputArray = new double [a];
-            for (int i = 0; i < a; i++) {
-                outputArray[i] = inputArray[i][b];
-            }
+    /**
+     * Takes the RealMatrix with average row values and transfers those values into a new 1D array
+     */
+    public double [] getAvgValuesArrayForDB(RealMatrix inputMatrix)  {
+        double [] outputArray = inputMatrix.getColumn((inputMatrix.getColumnDimension()-1));
         return outputArray;
     }
 
@@ -71,7 +64,6 @@ public class ArrayProcessor {
                 d2[i][j] = d1[i][j];
             }
         }
-        //System.out.println(Arrays.deepToString(d2));
         return d2;
     }
 
@@ -83,10 +75,10 @@ public class ArrayProcessor {
     }
 
     /**
-     * Takes a normalised pixel array and matrix of matching principle components. The columns of the 2D array are split
-     * into a series of 3 x 1D arrays, each representing an image. Each column element is multiplied by the 1st principle
-     * component to create a new column of pixel weightings. This is repeated for each column using the 2nd principle
-     * component. The result is 6 columns (3 images x 2 principle components), which are placed in a new matrix.
+     * Takes a normalised pixel array and matrix of matching vectors. The columns of the 2D array are split
+     * into a series of 3 x 1D arrays, each representing an image. Each column element is multiplied by the 1st vector
+     * to create a new column of pixel weightings. This is repeated for each column using the 2nd,3rd & 4th vectors.
+     * The result is n columns (x images x 4 vectors), which are placed in a new matrix.
      */
     public void calculateImageWeights(double[][] inputArray, RealMatrix principleComponents, int x, int y, int z) {
         double [] columnArray = new double[inputArray.length];
@@ -127,7 +119,8 @@ public class ArrayProcessor {
     }
 
     /**
-     *
+     * Array of pixel weightings is taken in. Final row values (sum of column) are transferred to a new array to be
+     * stored in the databse for matching
      *
      * 'lastRow' calculation taken from user compski on Stack Overflow page:
      *  https://stackoverflow.com/questions/5134555/how-to-convert-a-1d-array-to-2d-array
@@ -140,7 +133,6 @@ public class ArrayProcessor {
         for (int i = 0; i < b; i++) {
             lastRow[i] = inputArray[a-1][i];
         }
-        //System.out.println("last row: " + Arrays.toString(lastRow));
         int y = weightsTable.length;
         int x = weightsTable[0].length;
         for(int i = 0; i < y; i++) {
