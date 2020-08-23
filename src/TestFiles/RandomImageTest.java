@@ -21,22 +21,31 @@ class RandomImageTest {
     void createArrayTest() {
         RandomImage ric1 = new RandomImage();
         ric1.createArray();
-        assertEquals(ric1.h, ric1.getPixelArray().length);
-        assertEquals(ric1.w, ric1.getPixelArray()[0].length);
+        assertEquals(ric1.height, ric1.getPixelArray().length);
+        assertEquals(ric1.width, ric1.getPixelArray()[0].length);
     }
 
     /**
-     * Creates array, selects random element and tests that the value is the correct range for image pixel creation
+     * Creates array, selects random elements and tests that the values are in the correct range for image pixel
+     * creation
      */
     @Test
     void createImageTest() {
         RandomImage ric2 = new RandomImage();
         ric2.createArray();
-        Random r2a = new Random();
-        Random r2b = new Random();
-        int i2a = r2a.nextInt(ric2.h);
-        int i2b = r2b.nextInt(ric2.w);
+        Random r2 = new Random();
+        int i2a = r2.nextInt(ric2.height);
+        int i2b = r2.nextInt(ric2.width);
+        int i2c = r2.nextInt(ric2.height);
+        int i2d = r2.nextInt(ric2.width);
+        int i2e = r2.nextInt(ric2.height);
+        int i2f = r2.nextInt(ric2.width);
+        int i2g = r2.nextInt(ric2.height);
+        int i2h = r2.nextInt(ric2.width);
         assertTrue(ric2.getPixelArray() [i2a][i2b] < 257);
+        assertTrue(ric2.getPixelArray() [i2c][i2d] < 257);
+        assertTrue(ric2.getPixelArray() [i2e][i2f] < 257);
+        assertTrue(ric2.getPixelArray() [i2g][i2h] < 257);
     }
 
     /**

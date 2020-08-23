@@ -80,5 +80,29 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$USER_HOME$/Downloads/imgscalr-lib-4.2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="file://$USER_HOME$/Downloads/commons-lang3-3.11" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="file://$USER_HOME$/Downloads/commons-lang3-3.11/apidocs" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="file://$USER_HOME$/Downloads/commons-lang3-3.11" />
+        </SOURCES>
+        <jarDirectory url="file://$USER_HOME$/Downloads/commons-lang3-3.11" recursive="false" />
+        <jarDirectory url="file://$USER_HOME$/Downloads/commons-lang3-3.11" recursive="false" type="SOURCES" />
+      </library>
+    </orderEntry>
   </component>
 </module>

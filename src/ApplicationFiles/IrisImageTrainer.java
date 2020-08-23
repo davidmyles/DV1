@@ -14,26 +14,26 @@ import java.util.Arrays;
  */
 public class IrisImageTrainer {
 
-    static ImageMatrix im;
+    static ImageMatrix imageMatrix;
     static Array2DRowRealMatrix baseMatrix;
-    private static int w = 768;
-    private static int h = 576;
-    private static int x = 0;
-    private static int y = 0;
-    private static int cropWidth = 768;
-    private static int cropHeight = 576;
-    private static int scaleWidth = 768;
-    private static int scaleHeight = 576;
-    private static int finalPixels = scaleWidth*scaleHeight;
+    private static int inputWidth = 768;
+    private static int inputHeight = 576;
+    private static int x = 189;
+    private static int y = 163;
+    private static int finalWidth = 91;
+    private static int finalHeight = 269;
+    private static int finalPixels = finalWidth*finalHeight;
+    private static int noOfImages = 60;
 
     /**
      * First driver component. Creates a blank matrix with rows matching the total pixel count from input images
-     * @param images - number of images in training set. Translates to number of columns in the matrix
      */
-    public static void runIrisImageTrainer1(int images) {
-        im = new ImageMatrix();
-        im.createTrainingRealMatrix(finalPixels, (images+1));
-        baseMatrix = im.getTrainingMatrix();
+    public static void runIrisImageTrainer1() throws SQLException {
+        imageMatrix = new ImageMatrix();
+        imageMatrix.createTrainingRealMatrix(finalPixels, (noOfImages+1));
+        baseMatrix = imageMatrix.getTrainingMatrix();
+        User u = new User();
+        u.deleteAllUsersFromDB();
     }
 
     /**
@@ -44,14 +44,16 @@ public class IrisImageTrainer {
      * @param column - column number to which matrix is added
      * @throws IOException
      */
-    public static void runIrisImageTrainer2(String filepath, Array2DRowRealMatrix baseMatrix, int column) throws IOException {
+    public static void runIrisImageTrainer2(String filepath, Array2DRowRealMatrix baseMatrix, int column) throws IOException, SQLException {
         Image i = new Image();
-        BufferedImage bi = i.inputImage(filepath,w,h);
-        BufferedImage bi2 = i.cropImage(bi,x,y ,cropWidth,cropHeight);
-        BufferedImage bi3 = i.scaleImage(bi2, scaleWidth,scaleHeight);
+        int a = column+1;
+        User u = new User("user_"+a, "fname"+a, "lname"+a, a);
+        u.addUserToDB();
+        BufferedImage bi = i.inputImage(filepath, inputWidth, inputHeight);
+        BufferedImage bi2 = i.cropImage(bi,x,y ,finalWidth,finalHeight);
         ArrayProcessor ap = new ArrayProcessor();
         ImageMatrix im = new ImageMatrix();
-        double [][] d1 = i.createInputImageArray(bi3);
+        double [][] d1 = i.createInputImageArray(bi2);
         ap.flattenArray(d1);
         double [] d2 = ap.getFlatArray();
         im.populateTrainingMatrix(baseMatrix,d2,column);
@@ -61,30 +63,28 @@ public class IrisImageTrainer {
      * Third and final component in training set. Matrix with image arrays is processed to generate average values and
      * vectors. These are save to file and applied to training set. Result is a table of 4 weights for each image, which
      * are saved to database for matching.
-     * @param images - number of images in training set
      * @throws SQLException
      * @throws IOException
      */
-    public static void runIrisImageTrainer3(int images) throws SQLException, IOException {
+    public static void runIrisImageTrainer3() throws SQLException, IOException {
         ArrayProcessor ap = new ArrayProcessor();
         LinkSQL ls = new LinkSQL();
         FileManager fm = new FileManager();
         ls.clearWeights();
-        ap.getAvgValues(baseMatrix,images);
+        ap.getAvgValues(baseMatrix,noOfImages);
         double[] dx = ap.getTrainingAvgValues(baseMatrix);
         fm.saveAvgValuesToFile(dx, "saveData/AvgValues");
         ap.applyAvgValues(baseMatrix);
-        ap.finaliseAvgValues(baseMatrix);//Needed????
         System.out.println("Stage 7 Completed");
         double [][] d1 = ap.finaliseAvgValues(baseMatrix);
-        im.createImageRealMatrix(d1);
-        Array2DRowRealMatrix a2rrm = im.getTrainingMatrix();
+        imageMatrix.createImageRealMatrix(d1);
+        Array2DRowRealMatrix a2rrm = imageMatrix.getTrainingMatrix();
         SingularValueDecomposition svd1 = new SingularValueDecomposition(a2rrm);
         RealMatrix r1 = svd1.getU();
         double [][] dr = fm.reduceVectors(r1);
         fm.saveVectorsToFile(dr, "saveData/Vectors");
         System.out.println("Stage 8 Completed");
-        ap.createPCMatrix(finalPixels,(images*4));
+        ap.createPCMatrix(finalPixels,(noOfImages*4));
         ap.applyTrainingVectors(d1,r1,1,0);
         ap.applyTrainingVectors(d1,r1,2,4);
         ap.applyTrainingVectors(d1,r1,3,8);
@@ -161,7 +161,7 @@ public class IrisImageTrainer {
      * @throws IOException
      */
     public static void main(String args[]) throws SQLException, IOException {
-        runIrisImageTrainer1(60);
+        runIrisImageTrainer1();
         runIrisImageTrainer2("IrisImages(576x768)/001L_1.png", baseMatrix, 0);
         runIrisImageTrainer2("IrisImages(576x768)/002L_1.png", baseMatrix, 1);
         runIrisImageTrainer2("IrisImages(576x768)/003L_1.png", baseMatrix, 2);
@@ -228,8 +228,6 @@ public class IrisImageTrainer {
         runIrisImageTrainer2("IrisImages(576x768)/059L_1.png", baseMatrix, 58);
         runIrisImageTrainer2("IrisImages(576x768)/060L_1.png", baseMatrix, 59);
         System.out.println("Stage 6 Completed");
-        runIrisImageTrainer3(60);
+        runIrisImageTrainer3();
     }
-
-
 }

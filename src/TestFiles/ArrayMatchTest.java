@@ -1,6 +1,6 @@
 package TestFiles;
 
-import ApplicationFiles.InputImage;
+import ApplicationFiles.Image;
 import ApplicationFiles.RandomImage;
 import org.junit.jupiter.api.Test;
 
@@ -12,6 +12,9 @@ import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * Test class for input/output data integrity. Not tied to a specific class from application package
+ */
 class ArrayMatchTest {
 
     /**
@@ -31,8 +34,8 @@ class ArrayMatchTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        InputImage ii1 = new InputImage("/Users/davidjmyles/IdeaProjects/DV1/testimages/img_01.png",5, 5);
-        BufferedImage bi1 = ii1.getInputImage();
+        Image ii1 = new Image();
+        BufferedImage bi1 = ii1.inputImage("/Users/davidjmyles/IdeaProjects/DV1/testimages/img_01.png",9, 9);
         double [][] iia1 = ii1.createInputImageArray(bi1);
         Random r1 = new Random();
         int i1 = r1.nextInt(iia1.length);
@@ -43,6 +46,5 @@ class ArrayMatchTest {
         assertEquals(pa [i1][i2], iia1 [i1][i2]);
         assertEquals(pa [i2][i1], iia1 [i2][i1]);
         assertEquals(pa [i2][i2], iia1 [i2][i2]);
-
     }
 }

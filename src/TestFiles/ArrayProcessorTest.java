@@ -6,8 +6,9 @@ import org.apache.commons.math3.linear.RealMatrix;
 import org.apache.commons.math3.linear.SingularValueDecomposition;
 import org.junit.jupiter.api.Test;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,25 +24,25 @@ class ArrayProcessorTest {
      */
     @Test
     void getAvgValuesTest() {
+        ArrayProcessor ap = new ArrayProcessor();
         RandomImage ric1 = new RandomImage();
         ric1.createArray();
         double [][] d1 = ric1.getPixelArray();
-        ric1.flattenArray(d1);
-        double [] d2 = ric1.getFlatArray();
+        ap.flattenArray(d1);
+        double [] d2 = ap.getFlatArray();
         RandomImage ric2 = new RandomImage();
         ric2.createArray();
         double [][] d3 = ric2.getPixelArray();
-        ric2.flattenArray(d3);
-        double [] d4 = ric2.getFlatArray();
+        ap.flattenArray(d3);
+        double [] d4 = ap.getFlatArray();
         RandomImage ric3 = new RandomImage();
         ric3.createArray();
         double [][] d5 = ric3.getPixelArray();
-        ric3.flattenArray(d5);
-        double [] d6 = ric3.getFlatArray();
+        ap.flattenArray(d5);
+        double [] d6 = ap.getFlatArray();
         ImageMatrix crm = new ImageMatrix();
-        ArrayProcessor ap = new ArrayProcessor();
         int x = d2.length;
-        crm.CreateTrainingRealMatrix(x, 4);
+        crm.createTrainingRealMatrix(x, 4);
         Array2DRowRealMatrix a2rrm = crm.getTrainingMatrix();
         crm.populateTrainingMatrix(a2rrm, d2, 0);
         crm.populateTrainingMatrix(a2rrm, d4, 1);
@@ -65,25 +66,25 @@ class ArrayProcessorTest {
      */
     @Test
     void applyAvgValuesTest() {
+        ArrayProcessor ap = new ArrayProcessor();
         RandomImage ric1 = new RandomImage();
         ric1.createArray();
         double [][] d1 = ric1.getPixelArray();
-        ric1.flattenArray(d1);
-        double [] d2 = ric1.getFlatArray();
+        ap.flattenArray(d1);
+        double [] d2 = ap.getFlatArray();
         RandomImage ric2 = new RandomImage();
         ric2.createArray();
         double [][] d3 = ric2.getPixelArray();
-        ric2.flattenArray(d3);
-        double [] d4 = ric2.getFlatArray();
+        ap.flattenArray(d3);
+        double [] d4 = ap.getFlatArray();
         RandomImage ric3 = new RandomImage();
         ric3.createArray();
         double [][] d5 = ric3.getPixelArray();
-        ric3.flattenArray(d5);
-        double [] d6 = ric3.getFlatArray();
+        ap.flattenArray(d5);
+        double [] d6 = ap.getFlatArray();
         ImageMatrix crm = new ImageMatrix();
-        ArrayProcessor ap = new ArrayProcessor();
         int x = d2.length;
-        crm.CreateTrainingRealMatrix(x, 4);
+        crm.createTrainingRealMatrix(x, 4);
         Array2DRowRealMatrix a2rrm = crm.getTrainingMatrix();
         crm.populateTrainingMatrix(a2rrm, d2, 0);
         crm.populateTrainingMatrix(a2rrm, d4, 1);
@@ -108,25 +109,25 @@ class ArrayProcessorTest {
      */
     @Test
     void finaliseAvgValuesTest() {
+        ArrayProcessor ap = new ArrayProcessor();
         RandomImage ric1 = new RandomImage();
         ric1.createArray();
         double [][] d1 = ric1.getPixelArray();
-        ric1.flattenArray(d1);
-        double [] d2 = ric1.getFlatArray();
+        ap.flattenArray(d1);
+        double [] d2 = ap.getFlatArray();
         RandomImage ric2 = new RandomImage();
         ric2.createArray();
         double [][] d3 = ric2.getPixelArray();
-        ric2.flattenArray(d3);
-        double [] d4 = ric2.getFlatArray();
+        ap.flattenArray(d3);
+        double [] d4 = ap.getFlatArray();
         RandomImage ric3 = new RandomImage();
         ric3.createArray();
         double [][] d5 = ric3.getPixelArray();
-        ric3.flattenArray(d5);
-        double [] d6 = ric3.getFlatArray();
+        ap.flattenArray(d5);
+        double [] d6 = ap.getFlatArray();
         ImageMatrix crm = new ImageMatrix();
-        ArrayProcessor ap = new ArrayProcessor();
         int x = d2.length;
-        crm.CreateTrainingRealMatrix(x, 4);
+        crm.createTrainingRealMatrix(x, 4);
         Array2DRowRealMatrix a2rrm = crm.getTrainingMatrix();
         crm.populateTrainingMatrix(a2rrm, d2, 0);
         crm.populateTrainingMatrix(a2rrm, d4, 1);
@@ -140,65 +141,6 @@ class ArrayProcessorTest {
     }
 
     /**
-     * All steps from finaliseAvgValuesTest() completed. Normalised array is subjected to SVD, with the U matrix
-     * returned. Each value from the array is multiplied by the 1st 2 principle components of the U matrix. Assert
-     * statements check that 3 selected values from the final returned matrix match the corresponding value from the
-     * input array, multiplied by the relevant principle component
-     */
-    @Test
-    void calculateImageWeightsTest() {
-        RandomImage ric1 = new RandomImage();
-        ric1.createArray();
-        double [][] d1 = ric1.getPixelArray();
-        ric1.flattenArray(d1);
-        double [] d2 = ric1.getFlatArray();
-        RandomImage ric2 = new RandomImage();
-        ric2.createArray();
-        double [][] d3 = ric2.getPixelArray();
-        ric2.flattenArray(d3);
-        double [] d4 = ric2.getFlatArray();
-        RandomImage ric3 = new RandomImage();
-        ric3.createArray();
-        double [][] d5 = ric3.getPixelArray();
-        ric3.flattenArray(d5);
-        double [] d6 = ric3.getFlatArray();
-        ImageMatrix crm = new ImageMatrix();
-        ArrayProcessor ap = new ArrayProcessor();
-        int x = d2.length;
-        crm.CreateTrainingRealMatrix(x, 4);
-        Array2DRowRealMatrix a2rrm = crm.getTrainingMatrix();
-        crm.populateTrainingMatrix(a2rrm, d2, 0);
-        crm.populateTrainingMatrix(a2rrm, d4, 1);
-        crm.populateTrainingMatrix(a2rrm, d6, 2);
-        ap.getAvgValues(a2rrm,3);
-        ap.applyAvgValues(a2rrm);
-        ap.finaliseAvgValues(a2rrm);
-        double [][] d7 = ap.finaliseAvgValues(a2rrm);
-        SVD svd = new SVD();
-        svd.CreateTrainingSVD(a2rrm);
-        SingularValueDecomposition svd1 = svd.getTrainingSVD();
-        RealMatrix r1 = svd1.getU();
-        ap.createPCMatrix(81,12);
-        ap.calculateImageWeights(d7,r1,0, 0, 0);
-        ap.calculateImageWeights(d7,r1,0, 1, 1);
-        ap.calculateImageWeights(d7,r1,0, 2, 2);
-        ap.calculateImageWeights(d7,r1,0, 3, 3);
-        ap.calculateImageWeights(d7,r1,1, 0, 4);
-        ap.calculateImageWeights(d7,r1,1, 1, 5);
-        ap.calculateImageWeights(d7,r1,1, 2, 6);
-        ap.calculateImageWeights(d7,r1,1, 3, 7);
-        ap.calculateImageWeights(d7,r1,2, 0, 8);
-        ap.calculateImageWeights(d7,r1,2, 1, 9);
-        ap.calculateImageWeights(d7,r1,2, 2, 10);
-        ap.calculateImageWeights(d7,r1,2, 3, 11);
-        RealMatrix r2 = ap.getPCMatrix();
-        assertEquals(d7[0][0]*r1.getEntry(0,0), r2.getEntry(0,0),1);
-        assertEquals(d7[4][1]*r1.getEntry(4,1), r2.getEntry(4,5),1);
-        assertEquals(d7[8][2]*r1.getEntry(8,2), r2.getEntry(8,10),1);
-
-    }
-
-    /**
      * All steps from calculateImageWeightsTest() completed. Matrix with pixel weightings is turned into 2D array with
      * an extra row at the end. Sum of the values from each column are added to this row. Test checks that the sum of
      * all values in a randomly selected column from the Matrix match the value in the last row of that column from the
@@ -206,25 +148,25 @@ class ArrayProcessorTest {
      */
     @Test
     void createWeightsArrayTest() {
+        ArrayProcessor ap = new ArrayProcessor();
         RandomImage ric1 = new RandomImage();
         ric1.createArray();
         double [][] d1 = ric1.getPixelArray();
-        ric1.flattenArray(d1);
-        double [] d2 = ric1.getFlatArray();
+        ap.flattenArray(d1);
+        double [] d2 = ap.getFlatArray();
         RandomImage ric2 = new RandomImage();
         ric2.createArray();
         double [][] d3 = ric2.getPixelArray();
-        ric2.flattenArray(d3);
-        double [] d4 = ric2.getFlatArray();
+        ap.flattenArray(d3);
+        double [] d4 = ap.getFlatArray();
         RandomImage ric3 = new RandomImage();
         ric3.createArray();
         double [][] d5 = ric3.getPixelArray();
-        ric3.flattenArray(d5);
-        double [] d6 = ric3.getFlatArray();
+        ap.flattenArray(d5);
+        double [] d6 = ap.getFlatArray();
         ImageMatrix crm = new ImageMatrix();
-        ArrayProcessor ap = new ArrayProcessor();
         int x = d2.length;
-        crm.CreateTrainingRealMatrix(x, 4);
+        crm.createTrainingRealMatrix(x, 4);
         Array2DRowRealMatrix a2rrm = crm.getTrainingMatrix();
         crm.populateTrainingMatrix(a2rrm, d2, 0);
         crm.populateTrainingMatrix(a2rrm, d4, 1);
@@ -233,23 +175,12 @@ class ArrayProcessorTest {
         ap.applyAvgValues(a2rrm);
         ap.finaliseAvgValues(a2rrm);
         double [][] d7 = ap.finaliseAvgValues(a2rrm);
-        SVD svd = new SVD();
-        svd.CreateTrainingSVD(a2rrm);
-        SingularValueDecomposition svd1 = svd.getTrainingSVD();
+        SingularValueDecomposition svd1 = new SingularValueDecomposition(a2rrm);
         RealMatrix r1 = svd1.getU();
         ap.createPCMatrix(81,12);
-        ap.calculateImageWeights(d7,r1,0, 0, 0);
-        ap.calculateImageWeights(d7,r1,0, 1, 1);
-        ap.calculateImageWeights(d7,r1,0, 2, 2);
-        ap.calculateImageWeights(d7,r1,0, 2, 3);
-        ap.calculateImageWeights(d7,r1,1, 0, 4);
-        ap.calculateImageWeights(d7,r1,1, 1, 5);
-        ap.calculateImageWeights(d7,r1,1, 2, 6);
-        ap.calculateImageWeights(d7,r1,1, 3, 7);
-        ap.calculateImageWeights(d7,r1,2, 0, 8);
-        ap.calculateImageWeights(d7,r1,2, 1, 9);
-        ap.calculateImageWeights(d7,r1,2, 2, 10);
-        ap.calculateImageWeights(d7,r1,2, 3, 11);
+        ap.applyTrainingVectors(d7,r1,1,0);
+        ap.applyTrainingVectors(d7,r1,2,4);
+        ap.applyTrainingVectors(d7,r1,3,8);
         RealMatrix r2 = ap.getPCMatrix();
         double [][] d8 = ap.createWeightsArray(r2);
         Random rand1 = new Random();
@@ -262,83 +193,96 @@ class ArrayProcessorTest {
         assertEquals(a,b);
     }
 
+    /**
+     * 3 images from file processed for average values and vectors generation. 4 vectors then applied to the images.
+     * Test takes 3 positions on final array and checks that the values match normalised array value multiplied by vector
+     * value at those positions.
+     * @throws SQLException
+     */
     @Test
-    void getPCMatrix() throws SQLException {
-        RandomImage ric1 = new RandomImage();
-        ric1.createArray();
-        double [][] d1 = ric1.getPixelArray();
-        ric1.flattenArray(d1);
-        double [] d2 = ric1.getFlatArray();
-        RandomImage ric2 = new RandomImage();
-        ric2.createArray();
-        double [][] d3 = ric2.getPixelArray();
-        ric2.flattenArray(d3);
-        double [] d4 = ric2.getFlatArray();
-        RandomImage ric3 = new RandomImage();
-        ric3.createArray();
-        double [][] d5 = ric3.getPixelArray();
-        ric3.flattenArray(d5);
-        double [] d6 = ric3.getFlatArray();
-        ImageMatrix crm = new ImageMatrix();
+    void applyTrainingVectorsTest() throws SQLException, IOException {
         ArrayProcessor ap = new ArrayProcessor();
-        int x = d2.length;
-        crm.CreateTrainingRealMatrix(x, 4);
-        Array2DRowRealMatrix a2rrm = crm.getTrainingMatrix();
-        crm.populateTrainingMatrix(a2rrm, d2, 0);
-        crm.populateTrainingMatrix(a2rrm, d4, 1);
-        crm.populateTrainingMatrix(a2rrm, d6, 2);
-        ap.getAvgValues(a2rrm,3);
-        double [] d7 = ap.getAvgValuesArrayForDB(a2rrm);
-        LinkSQL ls = new LinkSQL();
-        ls.clearAvgValues();
-        ls.clearPrincipleComponents();
-        ls.clearWeights();
-        ls.clearUnknownImageWeights();
-        ls.savePixelAveragesToDB(d7);
-        SVD svd = new SVD();
-        svd.CreateTrainingSVD(a2rrm);
-        SingularValueDecomposition svd1 = svd.getTrainingSVD();
+        ImageMatrix im = new ImageMatrix();
+        FileManager fm = new FileManager();
+        im.createTrainingRealMatrix(442368, 4);
+        Array2DRowRealMatrix baseMatrix = im.getTrainingMatrix();
+        Image i = new Image();
+        BufferedImage bi = i.inputImage("IrisImages(576x768)/001L_1.png",768,567);
+        double [][] d1 = i.createInputImageArray(bi);
+        ap.flattenArray(d1);
+        double [] d2 = ap.getFlatArray();
+        Image i2 = new Image();
+        BufferedImage bi2 = i2.inputImage("IrisImages(576x768)/002L_1.png",768,567);
+        double [][] d3 = i2.createInputImageArray(bi2);
+        ap.flattenArray(d3);
+        double [] d4 = ap.getFlatArray();
+        Image i3 = new Image();
+        BufferedImage bi3 = i3.inputImage("IrisImages(576x768)/003L_1.png",768,567);
+        double [][] d5 = i3.createInputImageArray(bi3);
+        ap.flattenArray(d5);
+        double [] d6 = ap.getFlatArray();
+        im.populateTrainingMatrix(baseMatrix,d2,0);
+        im.populateTrainingMatrix(baseMatrix,d4,1);
+        im.populateTrainingMatrix(baseMatrix,d6,2);
+        ap.getAvgValues(baseMatrix,3);
+        ap.applyAvgValues(baseMatrix);
+        ap.finaliseAvgValues(baseMatrix);//Needed????
+        double [][] d11 = ap.finaliseAvgValues(baseMatrix);
+        im.createImageRealMatrix(d1);
+        Array2DRowRealMatrix a2rrm = im.getTrainingMatrix();
+        SingularValueDecomposition svd1 = new SingularValueDecomposition(a2rrm);
         RealMatrix r1 = svd1.getU();
-        double[][] dc = r1.getData();
-        ls.savePrincipleComponentsToDB(dc);
-        ap.applyAvgValues(a2rrm);
-        ap.finaliseAvgValues(a2rrm);
-        double [][] d9 = ap.finaliseAvgValues(a2rrm);
-        ap.createPCMatrix(81,12);
-        ap.calculateImageWeights(d9,r1,0, 0, 0);
-        ap.calculateImageWeights(d9,r1,0, 1, 1);
-        ap.calculateImageWeights(d9,r1,0, 2, 2);
-        ap.calculateImageWeights(d9,r1,0, 3, 3);
-        ap.calculateImageWeights(d9,r1,1, 0, 4);
-        ap.calculateImageWeights(d9,r1,1, 1, 5);
-        ap.calculateImageWeights(d9,r1,1, 2, 6);
-        ap.calculateImageWeights(d9,r1,1, 3, 7);
-        ap.calculateImageWeights(d9,r1,2, 0, 8);
-        ap.calculateImageWeights(d9,r1,2, 1, 9);
-        ap.calculateImageWeights(d9,r1,2, 2, 10);
-        ap.calculateImageWeights(d9,r1,2, 3, 11);
-        RealMatrix r2 = ap.getPCMatrix();
-        double[][] d10 = ap.createWeightsArray(r2);
-        ap.createWeightsTable(d10,4);
-        double [][] d11 = ap.getWeightsTable();
-        ls.saveWeightsTableToDB(d11);
-        int a = 9;
-        UnknownImage ui = new UnknownImage();
-        double [] d12 = ui.retrieveAvgValues();
-        double [] d13 = ui.applyAvgUnkown(d2,d12);
-        Array2DRowRealMatrix r3 = ui.retrievePrincipleComponentsx4();
-        Array2DRowRealMatrix r4 = ui.createPCMatrix(81);
-        ui.unknownImageWeightsPC(d13,r3,r4,0);
-        ui.unknownImageWeightsPC(d13,r3,r4,1);
-        ui.unknownImageWeightsPC(d13,r3,r4,2);
-        ui.unknownImageWeightsPC(d13,r3,r4,3);
-        double [][] d14 = ap.createWeightsArray(r4);
-        double [][] d15 = ui.createUnknownWeightsTable(d14);
-        System.out.println("Weights for unknown image" + Arrays.deepToString(d15));
-        assertEquals(d10[0][0],d14[0][0]);
+        double [][] dr = fm.reduceVectors(r1);
+        ap.createPCMatrix(442368,(12));
+        ap.applyTrainingVectors(d11,r1,1,0);
+        ap.applyTrainingVectors(d11,r1,2,4);
+        ap.applyTrainingVectors(d11,r1,3,8);
+        Array2DRowRealMatrix r2 = ap.getPCMatrix();
+        double d14 [][] = r2.getData();
+        assertEquals(d11[0][0]*dr[0][0],d14[0][0]);
+        assertEquals(d11[2][1]*dr[2][1],d14[2][1]);
+        assertEquals(d11[4][2]*dr[4][2],d14[4][2]);
+        assertEquals(d11[6][2]*dr[6][2],d14[6][2]);
     }
 
+    /**
+     * Simulates running a test image. Image is normalised and multiplied by saved vectors. Test verifies that final
+     * result at 3 positions matches the corresponding values for normalised array multiplied by vectors
+     * @throws IOException
+     */
     @Test
-    void getWeightsTable() {
+    void applyTestVectorsTest() throws IOException {
+        FileManager fm = new FileManager();
+        ArrayProcessor ap = new ArrayProcessor();
+        UnknownImage ui = new UnknownImage();
+        double[] p1 = ui.unknownImageInput("IrisImages(576x768)/001L_1.png",768,576,0,0, 768,576);
+        int pixelCount = p1.length;
+        double[] p2 = fm.retrieveAvgValuesFromFile("saveData/AvgValues", (pixelCount));
+        double[] p3 = ui.applyAvgToUnkown(p1, p2);
+        double[][] p4 = fm.retrieveVectorsFromFile("saveData/Vectors", (pixelCount));
+        Array2DRowRealMatrix rm = new Array2DRowRealMatrix(p4);
+        ap.createPCMatrix(pixelCount,4);
+        Array2DRowRealMatrix rm2 = ap.getPCMatrix();
+        ap.applyTestVectors(p3,rm);
+        assertEquals(rm2.getRowDimension(),p3.length);
+        assertEquals(rm2.getEntry(0,0), p3[0]*rm.getEntry(0,0));
+        assertEquals(rm2.getEntry(300,2), p3[300]*rm.getEntry(300,2));
+        assertEquals(rm2.getEntry(25000,3), p3[25000]*rm.getEntry(25000,3));
+    }
+
+    /**
+     * Uses saved vectors as dummy 2D array. Creates weights table from the array and verifies that the final row from
+     * the array (which would be the weight) is in the correct position in the returned table.
+     * @throws IOException
+     */
+    @Test
+    void createWeightsTableTest() throws IOException {
+        FileManager fm = new FileManager();
+        ArrayProcessor ap = new ArrayProcessor();
+        double [][] d1 = fm.retrieveVectorsFromFile("saveData/Vectors", 442368);
+        double [][] d2 = ap.createWeightsTable(d1,4);
+        int a = d1.length-1;
+        assertEquals(d1[a][0],d2[0][0]);
+        assertEquals(d1[a][1],d2[0][1]);
     }
 }
